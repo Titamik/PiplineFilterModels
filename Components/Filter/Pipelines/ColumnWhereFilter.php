@@ -2,22 +2,22 @@
 
 use  Illuminate\Database\Eloquent\Builder;
 
-class ColumnWhereFilter
+final class ColumnWhereFilter
 {
-    private $column;
-    private $operator = '=';
-    private $value;
-
-    public function __construct(string $column, string $operator, string $value)
-    {
-        $this->column = $column;
-        $this->value = $value;
-        $this->operator = $operator;
-    }
+    public function __construct(
+        private string $column,
+        private string $value,
+        private string $operator = '='
+    )
+    {}
 
     public function handle(Builder $builder, \Closure $next)
     {
-        $builder->where($this->column, $this->operator, $this->value);
+        $builder->where(
+            $this->column,
+            $this->operator,
+            $this->value
+        );
         return $next($builder);
     }
 }
