@@ -5,17 +5,16 @@ use Illuminate\Database\Eloquent\Builder;
 
 class SortOrder
 {
-    private $value;
-
-    public function __construct(string $value)
+    public function __construct(
+        private readonly string $value
+    )
     {
-        $this->value = $value;
     }
 
     public function handle(Builder $builder, \Closure $next)
     {
-        $builder//->orderBy($this->value, $this->direction);
-        ->orderByRaw("{$this->value}");
+        [$column, $direction] = explode(',', $this->value, 2);
+        $builder->orderBy($column, $direction);
 
         return $next($builder);
     }

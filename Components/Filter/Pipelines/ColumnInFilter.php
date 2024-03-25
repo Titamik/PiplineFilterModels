@@ -2,22 +2,23 @@
 
 use  Illuminate\Database\Eloquent\Builder;
 
-class ColumnInFilter
+final class ColumnInFilter
 {
-    private $column;
-    private $values;
-    private $boolean = 'and';
-
-    public function __construct(string $column, array $values, string $boolean = 'and')
-    {
-        $this->column = $column;
-        $this->values = $values;
-        $this->boolean = $boolean;
+    public function __construct(
+        private string $column,
+        private array $value,
+        private string $operator = 'and'
+    ){
     }
 
     public function handle(Builder $builder, \Closure $next)
     {
-        $builder->whereIn($this->column, $this->values, $this->boolean);
+        $builder->whereIn(
+            $this->column,
+            $this->value,
+            $this->operator
+        );
+
         return $next($builder);
     }
 }

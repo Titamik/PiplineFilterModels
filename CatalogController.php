@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Http\Request\FilterRequest;
 use App\Repositories\EquipmentRepository;
 use App\Repositories\ModelRepository;
 use App\Repositories\PageRepository;
@@ -29,16 +30,15 @@ class CatalogController extends BaseController
         // $this->modelFilter = new ModelFilter;
     }
 
-    public function index()
+    public function index(FilterRequest $request)
     {
-        if (request()->ajax()) {
+        if ($request->ajax()) {
             return $this->paginate();
         }
 
         // FilterData
         $filterData = $this->getFilterData();
-
-        $filteredModels = $this->filterModels($this->filterNewlimit);
+        $filteredModels = $this->filterModels($request, $this->filterNewlimit);
         $filteredModels = $this->setImages($filteredModels);
 
         return view(
